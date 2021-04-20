@@ -5,11 +5,11 @@ import unittest.mock as mock
 import numpy
 import pytest
 
-from smqtk.algorithms.image_io.pil_io import PilImageReader
-from smqtk.representation import AxisAlignedBoundingBox
-from smqtk.representation.data_element.memory_element import DataMemoryElement
-from smqtk.representation.data_element.file_element import DataFileElement
-from smqtk.utils.configuration import configuration_test_helper
+from smqtk_image_io.impls.image_reader.pil_io import PilImageReader
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from smqtk_dataprovider.impls.data_element.file import DataFileElement
+from smqtk_dataprovider.impls.data_element.memory import DataMemoryElement
+from smqtk_core.configuration import configuration_test_helper
 
 from tests import TEST_DATA_DIR
 
@@ -98,7 +98,7 @@ class TestPilImageReader (unittest.TestCase):
                                  "provided by DataMemoryElement"):
             inst.load_as_matrix(d)
 
-    @mock.patch('smqtk.algorithms.image_io.pil_io.PIL.Image.open')
+    @mock.patch('smqtk_image_io.impls.image_reader.pil_io.PIL.Image.open')
     def test_load_as_matrix_other_exception(self, m_pil_open):
         """
         Test that some other exception raised from ``PIL.Image.open`` is
@@ -112,7 +112,7 @@ class TestPilImageReader (unittest.TestCase):
         with pytest.raises(RuntimeError, match=str(expected_exception)):
             inst.load_as_matrix(self.gh_file_element)
 
-    @mock.patch('smqtk.algorithms.image_io.pil_io.PIL.Image.open')
+    @mock.patch('smqtk_image_io.impls.image_reader.pil_io.PIL.Image.open')
     def test_load_as_matrix_other_io_exception(self, m_pil_open):
         """
         Test that an IOError that does match conditions for alternate raise

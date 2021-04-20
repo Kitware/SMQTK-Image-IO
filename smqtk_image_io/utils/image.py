@@ -8,7 +8,7 @@ import PIL.ImageEnhance
 
 from six.moves import range
 
-from smqtk.representation.data_element.file_element import DataElement
+from smqtk_dataprovider import DataElement
 
 
 def is_loadable_image(data_element):

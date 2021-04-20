@@ -6,9 +6,11 @@ from typing import Dict, Optional, List, Sequence, Set, Union
 import warnings
 
 import numpy as np
+import six
+from six.moves import range
 
-from smqtk.algorithms import ImageReader
-from smqtk.utils.image import crop_in_bounds
+from smqtk_image_io.interfaces.image_reader import ImageReader
+from smqtk_image_io.utils.image import crop_in_bounds
 
 try:
     import osgeo  # type: ignore
