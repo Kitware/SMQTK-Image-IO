@@ -6,10 +6,9 @@ import unittest
 
 from six.moves import StringIO
 
-from smqtk.bin.check_images import main as check_images_main
-from smqtk.representation import AxisAlignedBoundingBox
-from smqtk.representation.data_element.file_element import DataFileElement
-from smqtk.utils.image import (
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from smqtk_dataprovider.impls.data_element.file import DataFileElement
+from smqtk_image_io.utils.image import (
     is_loadable_image,
     is_valid_element,
     crop_in_bounds,

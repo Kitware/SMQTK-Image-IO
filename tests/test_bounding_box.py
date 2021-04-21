@@ -6,8 +6,8 @@ import pytest
 
 import unittest.mock as mock
 
-from smqtk.representation.bbox import AxisAlignedBoundingBox
-from smqtk.utils.configuration import configuration_test_helper
+from smqtk_image_io import AxisAlignedBoundingBox
+from smqtk_core.configuration import configuration_test_helper
 
 
 ###############################################################################
@@ -197,7 +197,7 @@ def test_bbox_repr():
     Test that __repr__ returns without error.
     """
     assert repr(AxisAlignedBoundingBox([0], [1.2])) == \
-        "<smqtk.representation.bbox.AxisAlignedBoundingBox " \
+        "<smqtk_image_io.AxisAlignedBoundingBox " \
         "min_vertex=[0] max_vertex=[1.2]>"
 
 
@@ -292,7 +292,7 @@ def test_bbox_equality_other_not_bbox():
     assert not (bb1 == 'not a bbox')
 
 
-@mock.patch('smqtk.representation.bbox.AxisAlignedBoundingBox.__eq__')
+@mock.patch('smqtk_image_io.AxisAlignedBoundingBox.__eq__')
 def test_bbox_not_equal(m_bbox_eq):
     """
     Test that non-equality is just calling the __eq__ in

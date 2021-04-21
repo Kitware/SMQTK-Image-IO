@@ -10,18 +10,19 @@ import numpy
 import pytest
 import unittest.mock as mock
 
-from smqtk.algorithms.image_io.gdal_io import (
+from smqtk_image_io.impls.image_reader.gdal_io import (
     osgeo,
     get_gdal_driver_supported_mimetypes,
     load_dataset_tempfile,
     load_dataset_vsimem,
     GdalImageReader,
 )
-from smqtk.algorithms.image_io import gdal_io
-from smqtk.representation import AxisAlignedBoundingBox
-from smqtk.representation.data_element.file_element import DataFileElement
-from smqtk.representation.data_element.memory_element import DataMemoryElement
-from smqtk.utils.configuration import configuration_test_helper
+from smqtk_image_io.impls.image_reader import gdal_io
+from smqtk_image_io import AxisAlignedBoundingBox
+from smqtk_dataprovider import DataElement
+from smqtk_dataprovider.impls.data_element.file import DataFileElement
+from smqtk_dataprovider.impls.data_element.memory import DataMemoryElement
+from smqtk_core.configuration import configuration_test_helper
 
 from tests import TEST_DATA_DIR
 
@@ -81,7 +82,7 @@ class TestGdalHelperFunctions (unittest.TestCase):
 
         # A second call to the function should return the same thing but not
         # call anything from GDAL.
-        with mock.patch('smqtk.algorithms.image_io.gdal_io.gdal') as m_gdal:
+        with mock.patch('smqtk_image_io.impls.image_reader.gdal_io.gdal') as m_gdal:
             ret2 = get_gdal_driver_supported_mimetypes()
             assert ret2 == ret1
             m_gdal.GetDriverCount.assert_not_called()
@@ -100,7 +101,7 @@ class TestGdalHelperFunctions (unittest.TestCase):
         # Using explicit patcher start/stop in order to avoid using ``patch``
         # as a decorator because ``osgeo`` might not be defined when
         # decorating the method.
-        patcher_gdal_open = mock.patch('smqtk.algorithms.image_io.gdal_io.gdal'
+        patcher_gdal_open = mock.patch('smqtk_image_io.impls.image_reader.gdal_io.gdal'
                                        '.Open', wraps=osgeo.gdal.Open)
         self.addCleanup(patcher_gdal_open.stop)
 
@@ -141,12 +142,12 @@ class TestGdalHelperFunctions (unittest.TestCase):
         # as a *decorator* because ``osgeo`` might not be defined when
         # decorating the method.
         patcher_gdal_open = mock.patch(
-            'smqtk.algorithms.image_io.gdal_io.gdal.Open',
+            'smqtk_image_io.impls.image_reader.gdal_io.gdal.Open',
             wraps=osgeo.gdal.Open,
         )
         self.addCleanup(patcher_gdal_open.stop)
         patcher_gdal_unlink = mock.patch(
-            'smqtk.algorithms.image_io.gdal_io.gdal.Unlink',
+            'smqtk_image_io.impls.image_reader.gdal_io.gdal.Unlink',
             wraps=osgeo.gdal.Unlink,
         )
         self.addCleanup(patcher_gdal_unlink.stop)
@@ -225,7 +226,7 @@ def test_GdalImageReader_usable():
     """
     # Mock module value of ``osgeo`` to something not None to simulate
     # something having been imported.
-    with mock.patch.dict('smqtk.algorithms.image_io.gdal_io.__dict__',
+    with mock.patch.dict('smqtk_image_io.impls.image_reader.gdal_io.__dict__',
                          {'osgeo': object()}):
         assert GdalImageReader.is_usable() is True
 
@@ -240,7 +241,7 @@ def test_GdalImageReader_not_usable_missing_osgeo():
         warnings.filterwarnings('ignore', category=UserWarning)
 
         # Mock module value of ``osgeo`` to None.
-        with mock.patch.dict('smqtk.algorithms.image_io.gdal_io.__dict__',
+        with mock.patch.dict('smqtk_image_io.impls.image_reader.gdal_io.__dict__',
                              {'osgeo': None}):
             assert GdalImageReader.is_usable() is False
 
@@ -272,7 +273,7 @@ class TestGdalImageReader (unittest.TestCase):
                                              r"of: "):
             GdalImageReader(load_method="not a valid method")
 
-    @mock.patch("smqtk.algorithms.image_io.gdal_io.osgeo")
+    @mock.patch("smqtk_image_io.impls.image_reader.gdal_io.osgeo")
     def test_init_vsimem_req_gdal_2_fail(self, m_osgeo):
         """
         Test that we get a RuntimeError when using load_method='vsimem' and
@@ -288,7 +289,7 @@ class TestGdalImageReader (unittest.TestCase):
                                          "1.11.0")):
             GdalImageReader(load_method=GdalImageReader.LOAD_METHOD_VSIMEM)
 
-    @mock.patch("smqtk.algorithms.image_io.gdal_io.osgeo")
+    @mock.patch("smqtk_image_io.impls.image_reader.gdal_io.osgeo")
     def test_init_vsimem_req_gdal_2_pass(self, m_osgeo):
         """
         Test that we do NOT get an error when using load_method='vsimem'
@@ -394,7 +395,7 @@ class TestGdalImageReader (unittest.TestCase):
         inst2 = pickle.loads(buff)
         assert inst2.get_config() == expected_config
 
-    @mock.patch('smqtk.algorithms.image_io.gdal_io'
+    @mock.patch('smqtk_image_io.impls.image_reader.gdal_io'
                 '.get_gdal_driver_supported_mimetypes',
                 wraps=get_gdal_driver_supported_mimetypes)
     def test_valid_content_types(self, m_ggdsm):

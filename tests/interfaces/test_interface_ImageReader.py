@@ -2,9 +2,10 @@ import unittest.mock as mock
 import numpy as np
 import pytest
 
-from smqtk.algorithms.image_io import ImageReader
-from smqtk.representation import AxisAlignedBoundingBox, DataElement
-from smqtk.representation.data_element.matrix import MatrixDataElement
+from smqtk_image_io.interfaces.image_reader import ImageReader
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from smqtk_dataprovider import DataElement
+from smqtk_dataprovider.impls.data_element.matrix import MatrixDataElement
 
 
 class DummyImageReader (ImageReader):

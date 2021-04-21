@@ -2,11 +2,11 @@ import abc
 
 import numpy
 
-from smqtk.algorithms import SmqtkAlgorithm
-from smqtk.utils import ContentTypeValidator
+from smqtk_core import Plugfigurable
+from smqtk_dataprovider import ContentTypeValidator
 
 
-class ImageReader (SmqtkAlgorithm, ContentTypeValidator):
+class ImageReader (Plugfigurable, ContentTypeValidator):
     """
     Interface for algorithms that load a raster image matrix from a data
     element.
