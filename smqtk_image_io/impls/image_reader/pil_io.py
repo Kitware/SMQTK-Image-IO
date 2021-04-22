@@ -2,8 +2,12 @@ import numpy
 
 from six import BytesIO
 
+from smqtk_dataprovider import DataElement
 from smqtk_image_io.interfaces.image_reader import ImageReader
 from smqtk_image_io.utils.image import crop_in_bounds
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
+
+from typing import Optional, Set, Dict
 
 try:
     import PIL.Image
@@ -21,10 +25,10 @@ class PilImageReader (ImageReader):
     """
 
     @classmethod
-    def is_usable(cls):
+    def is_usable(cls) -> bool:
         return IMPORT_SUCCESS
 
-    def __init__(self, explicit_mode=None):
+    def __init__(self, explicit_mode: Optional[str] = None) -> None:
         """
         Image reader that uses PIL to load the image.
 
@@ -52,19 +56,22 @@ class PilImageReader (ImageReader):
                              .format(explicit_mode, PIL.Image.MODES))
         self._explicit_mode = explicit_mode
 
-    def get_config(self):
+    def get_config(self) -> Dict:
         return {
             'explicit_mode': self._explicit_mode,
         }
 
-    def valid_content_types(self):
+    def valid_content_types(self) -> Set:
         # Explicitly load standard file format drivers.
         # - confirmed idempotent from at least version 5.3.0
         # TODO: get access to lazy-loaded file format driver extensions?
         PIL.Image.preinit()
         return set(PIL.Image.MIME.values())
 
-    def _load_as_matrix(self, data_element, pixel_crop=None):
+    def _load_as_matrix(
+        self, data_element: DataElement,
+            pixel_crop: Optional[AxisAlignedBoundingBox] = None) \
+            -> numpy.ndarray:
         """
         Internal method to be implemented that attempts loading an image
         from the given data element and returning it as an image matrix.

@@ -11,6 +11,7 @@ from smqtk_dataprovider.impls.data_element.file import DataFileElement
 from smqtk_dataprovider.impls.data_element.memory import DataMemoryElement
 from smqtk_core.configuration import configuration_test_helper
 
+from smqtk_image_io.impls.image_reader.pil_io import PIL
 from tests import TEST_DATA_DIR
 
 
@@ -21,9 +22,14 @@ class TestPilImageReader (unittest.TestCase):
     """
     Test PIL based implementation of ImageReader interface.
     """
+    gh_image_fp: str
+    gh_file_element: DataFileElement
+    gh_cropped_image_fp: str
+    gh_cropped_bbox: AxisAlignedBoundingBox
+    gh_cropped_file_element: DataFileElement
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.gh_image_fp = os.path.join(TEST_DATA_DIR, "grace_hopper.png")
         cls.gh_file_element = DataFileElement(cls.gh_image_fp)
         assert cls.gh_file_element.content_type() == 'image/png'
@@ -34,14 +40,19 @@ class TestPilImageReader (unittest.TestCase):
         assert cls.gh_cropped_file_element.content_type() == 'image/png'
         cls.gh_cropped_bbox = AxisAlignedBoundingBox([100, 100], [200, 200])
 
-    def test_init_invalid_mode(self):
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.gh_file_element.clean_temp()
+        cls.gh_cropped_file_element.clean_temp()
+
+    def test_init_invalid_mode(self) -> None:
         """
         Test that construction fails when a given ``explicit_mode``.
         """
         with pytest.raises(ValueError):
             PilImageReader(explicit_mode="not really a mode")
 
-    def test_init_no_mode(self):
+    def test_init_no_mode(self) -> None:
         """
         Test construction with default no-explicit image mode.
         """
@@ -49,7 +60,7 @@ class TestPilImageReader (unittest.TestCase):
         i = PilImageReader()
         assert i._explicit_mode == expected_mode
 
-    def test_init_valid_mode(self):
+    def test_init_valid_mode(self) -> None:
         """
         Test construction with a valid image mode.
         """
@@ -57,7 +68,7 @@ class TestPilImageReader (unittest.TestCase):
         i = PilImageReader(explicit_mode=expected_mode)
         assert i._explicit_mode == expected_mode
 
-    def test_configuration(self):
+    def test_configuration(self) -> None:
         """
         Test getting and constructing from configuration.
         """
@@ -66,14 +77,14 @@ class TestPilImageReader (unittest.TestCase):
         for inst in configuration_test_helper(i):  # type: PilImageReader
             assert inst._explicit_mode == expected_exmode
 
-    def test_valid_content_types(self):
+    def test_valid_content_types(self) -> None:
         """
         Test that the set of valid content types is not empty.
         """
         inst = PilImageReader()
         assert len(inst.valid_content_types()) > 0
 
-    def test_load_as_matrix_no_bytes(self):
+    def test_load_as_matrix_no_bytes(self) -> None:
         """
         Test that a data element with no bytes fails to load.
         """
@@ -85,7 +96,7 @@ class TestPilImageReader (unittest.TestCase):
                                  "provided by DataMemoryElement"):
             inst.load_as_matrix(d)
 
-    def test_load_as_matrix_invalid_bytes(self):
+    def test_load_as_matrix_invalid_bytes(self) -> None:
         """
         Test that data element with invalid data bytes fails to load.
         """
@@ -99,7 +110,8 @@ class TestPilImageReader (unittest.TestCase):
             inst.load_as_matrix(d)
 
     @mock.patch('smqtk_image_io.impls.image_reader.pil_io.PIL.Image.open')
-    def test_load_as_matrix_other_exception(self, m_pil_open):
+    def test_load_as_matrix_other_exception(
+            self, m_pil_open: PIL.Image.open) -> None:
         """
         Test that some other exception raised from ``PIL.Image.open`` is
         passed through.
@@ -113,7 +125,8 @@ class TestPilImageReader (unittest.TestCase):
             inst.load_as_matrix(self.gh_file_element)
 
     @mock.patch('smqtk_image_io.impls.image_reader.pil_io.PIL.Image.open')
-    def test_load_as_matrix_other_io_exception(self, m_pil_open):
+    def test_load_as_matrix_other_io_exception(
+            self, m_pil_open: PIL.Image.open) -> None:
         """
         Test that an IOError that does match conditions for alternate raise
         is raised as-is.
@@ -126,7 +139,7 @@ class TestPilImageReader (unittest.TestCase):
         with pytest.raises(IOError, match=str(expected_exception)):
             inst.load_as_matrix(self.gh_file_element)
 
-    def test_load_as_matrix_hopper(self):
+    def test_load_as_matrix_hopper(self) -> None:
         """
         Test loading valid data Grace Hopper image data element (native RGB
         image).
@@ -137,7 +150,7 @@ class TestPilImageReader (unittest.TestCase):
         assert mat.dtype == numpy.uint8
         assert mat.shape == (600, 512, 3)
 
-    def test_load_as_matrix_explicit_grayscale(self):
+    def test_load_as_matrix_explicit_grayscale(self) -> None:
         """
         Test loading valid Grace Hopper image with an explicit conversion
         type to grayscale. Should result in a single channel image (only 2
@@ -150,7 +163,7 @@ class TestPilImageReader (unittest.TestCase):
         assert mat.dtype == numpy.uint8
         assert mat.shape == (600, 512)
 
-    def test_load_as_matrix_with_crop(self):
+    def test_load_as_matrix_with_crop(self) -> None:
         """
         Test that passing valid crop bounding box results in the expected area.
 
@@ -164,7 +177,7 @@ class TestPilImageReader (unittest.TestCase):
                                          pixel_crop=self.gh_cropped_bbox)
         numpy.testing.assert_allclose(mat_actual, mat_expected)
 
-    def test_load_as_matrix_with_crop_not_integer(self):
+    def test_load_as_matrix_with_crop_not_integer(self) -> None:
         """
         Test passing a bounding box that is not integer aligned, which should
         raise an error in the super call.
@@ -177,7 +190,7 @@ class TestPilImageReader (unittest.TestCase):
                                              r"coordinates\."):
             inst.load_as_matrix(self.gh_file_element, pixel_crop=bb)
 
-    def test_load_as_matrix_with_crop_not_in_bounds(self):
+    def test_load_as_matrix_with_crop_not_in_bounds(self) -> None:
         """
         Test that error is raised when crop bbox is not fully within the image
         bounds.

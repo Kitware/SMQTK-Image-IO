@@ -2,14 +2,16 @@ import collections
 from contextlib import contextmanager
 from distutils.version import LooseVersion
 import tempfile
-from typing import Dict, Optional, List, Sequence, Set, Union
+from typing import Dict, Optional, List, Sequence, Set, Union, Iterable
 import warnings
 
 import numpy as np
 from six.moves import range
 
+from smqtk_dataprovider import DataElement
 from smqtk_image_io.interfaces.image_reader import ImageReader
 from smqtk_image_io.utils.image import crop_in_bounds
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
 
 try:
     import osgeo  # type: ignore
@@ -111,7 +113,7 @@ def get_gdal_gci_abbreviation_map() -> Dict[str, int]:
         return m
 
 
-def map_gci_list_to_names(gci_list):
+def map_gci_list_to_names(gci_list: Iterable[int]) -> List[str]:
     """
     Translate a sequence of GDAL GCI values into a list of their string names.
 
@@ -136,7 +138,7 @@ def map_gci_list_to_names(gci_list):
 #
 
 @contextmanager
-def load_dataset_tempfile(data_element):
+def load_dataset_tempfile(data_element: DataElement) -> "gdal.Dataset":
     """
     Load GDAL Dataset from element by first writing it to a temporary file.
 
@@ -155,7 +157,7 @@ def load_dataset_tempfile(data_element):
 
 
 @contextmanager
-def load_dataset_vsimem(data_element):
+def load_dataset_vsimem(data_element: DataElement) -> "gdal.Dataset":
     """
     Load GDAL dataset from element by writing its bytes to a virtual file
     and loading a dataset from that virtual file.
@@ -206,7 +208,7 @@ class GdalImageReader (ImageReader):
     }
 
     @classmethod
-    def is_usable(cls):
+    def is_usable(cls) -> bool:
         """
         Check whether this class is available for use.
 
@@ -233,7 +235,7 @@ class GdalImageReader (ImageReader):
         return True
 
     def __init__(self, load_method: str = LOAD_METHOD_TEMPFILE,
-                 channel_order: Optional[Union[str, Sequence[int]]] = None):
+                 channel_order: Optional[Union[str, Sequence[int]]] = None) -> None:
         """
         Use GDAL to read raster image pixel data and returns an image matrix in
         the format native to the input data.
@@ -353,7 +355,7 @@ class GdalImageReader (ImageReader):
                                    .format(self._load_method,
                                            osgeo.__version__))
 
-    def get_config(self):
+    def get_config(self) -> Dict:
         """
         Return a JSON-compliant dictionary that could be passed to this class's
         ``from_config`` method to produce an instance with identical
@@ -372,7 +374,7 @@ class GdalImageReader (ImageReader):
             'channel_order': self._channel_order,
         }
 
-    def valid_content_types(self):
+    def valid_content_types(self) -> Set[str]:
         """
         :return: A set valid MIME types that are "valid" within the implementing
             class' context.
@@ -380,7 +382,9 @@ class GdalImageReader (ImageReader):
         """
         return get_gdal_driver_supported_mimetypes()
 
-    def _load_as_matrix(self, data_element, pixel_crop=None):
+    def _load_as_matrix(
+        self, data_element: DataElement,
+            pixel_crop: AxisAlignedBoundingBox = None) -> np.ndarray:
         """
         Internal method to be implemented that attempts loading an image
         from the given data element and returning it as an image matrix.

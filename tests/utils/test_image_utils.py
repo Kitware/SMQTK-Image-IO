@@ -13,15 +13,17 @@ from tests import TEST_DATA_DIR
 
 
 class TestIsLoadableImage(unittest.TestCase):
+    good_image = None  # type: DataFileElement
+    non_image = None   # type: DataFileElement
 
     @classmethod
-    def setup_class(cls):
+    def setup_class(cls) -> None:
         cls.good_image = DataFileElement(os.path.join(TEST_DATA_DIR,
                                                       'Lenna.png'))
         cls.non_image = DataFileElement(os.path.join(TEST_DATA_DIR,
                                                      'test_file.dat'))
 
-    def test_non_data_element_raises_exception(self):
+    def test_non_data_element_raises_exception(self) -> None:
         # should throw:
         # AttributeError: 'bool' object has no attribute 'get_bytes'
         self.assertRaises(
@@ -29,36 +31,38 @@ class TestIsLoadableImage(unittest.TestCase):
             is_loadable_image, False
         )
 
-    def test_unloadable_image_returns_false(self):
+    def test_unloadable_image_returns_false(self) -> None:
         assert is_loadable_image(self.non_image) is False
 
-    def test_loadable_image_returns_true(self):
+    def test_loadable_image_returns_true(self) -> None:
         assert is_loadable_image(self.good_image) is True
 
 
 class TestIsValidElement(unittest.TestCase):
+    good_image = None  # type: DataFileElement
+    non_image = None   # type: DataFileElement
 
     @classmethod
-    def setup_class(cls):
+    def setup_class(cls) -> None:
         cls.good_image = DataFileElement(os.path.join(TEST_DATA_DIR,
                                                       'Lenna.png'))
         cls.non_image = DataFileElement(os.path.join(TEST_DATA_DIR,
                                                      'test_file.dat'))
 
-    def test_non_data_element(self):
+    def test_non_data_element(self) -> None:
         # Should check that input datum is a DataElement instance.
         # noinspection PyTypeChecker
-        assert is_valid_element(False) is False
+        assert is_valid_element(False) is False  # type: ignore
 
-    def test_invalid_content_type(self):
+    def test_invalid_content_type(self) -> None:
         assert is_valid_element(self.good_image, valid_content_types=[]) \
                is False
 
-    def test_valid_content_type(self):
+    def test_valid_content_type(self) -> None:
         assert is_valid_element(self.good_image,
                                 valid_content_types=['image/png']) is True
 
-    def test_invalid_image_returns_false(self):
+    def test_invalid_image_returns_false(self) -> None:
         assert is_valid_element(self.non_image, check_image=True) is False
 
 
@@ -67,7 +71,7 @@ class TestCropInBounds(object):
     Test using the ``crop_in_bounds`` function.
     """
 
-    def test_in_bounds_inside(self):
+    def test_in_bounds_inside(self) -> None:
         """
         Test that ``in_bounds`` passes when crop inside given rectangle bounds.
 
@@ -82,7 +86,7 @@ class TestCropInBounds(object):
         bb = AxisAlignedBoundingBox([1, 2], [3, 4])
         assert crop_in_bounds(bb, 4, 8)
 
-    def test_in_bounds_inside_edges(self):
+    def test_in_bounds_inside_edges(self) -> None:
         """
         Test that a crop is "in bounds" when contacting the 4 edges of the
         given rectangular bounds.
@@ -129,7 +133,7 @@ class TestCropInBounds(object):
         bb = AxisAlignedBoundingBox([1, 4], [3, 6])
         assert crop_in_bounds(bb, 4, 6)
 
-    def test_in_bounds_completely_outside(self):
+    def test_in_bounds_completely_outside(self) -> None:
         """
         Test that being completely outside the given bounds causes
         ``in_bounds`` to return False.
@@ -146,7 +150,7 @@ class TestCropInBounds(object):
         bb = AxisAlignedBoundingBox([100, -100], [102, -98])
         assert not crop_in_bounds(bb, 4, 6)
 
-    def test_in_bounds_crossing_edges(self):
+    def test_in_bounds_crossing_edges(self) -> None:
         """
         Test that ``in_bounds`` returns False when crop crossed the 4 edges.
 
@@ -193,7 +197,7 @@ class TestCropInBounds(object):
         bb = AxisAlignedBoundingBox([1, 4], [3, 7])
         assert not crop_in_bounds(bb, 4, 6)
 
-    def test_in_bounds_zero_crop_area(self):
+    def test_in_bounds_zero_crop_area(self) -> None:
         """
         Test that crop is not ``in_bounds`` when it has zero area (undefined).
         """

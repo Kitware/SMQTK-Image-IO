@@ -9,13 +9,15 @@ import unittest.mock as mock
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
 from smqtk_core.configuration import configuration_test_helper
 
+from typing import List, Tuple, Any, Union
 
 ###############################################################################
 # pytest Fixtures
 
+
 @pytest.fixture(params=[tuple, list, numpy.array],
                 ids=[None, None, 'numpy.array'])
-def seq_type(request):
+def seq_type(request: Any) -> Union[Tuple, List, numpy.ndarray]:
     """
     Enumerate via fixture sequence types of coordinates to test with
     AxisAlignedBoundingBox.
@@ -26,7 +28,7 @@ def seq_type(request):
 
 
 @pytest.fixture(params=[1, 2, 3, 4, 32])
-def ndim(request):
+def ndim(request: Any) -> int:
     """
     Enumerate coordinate dimensionality via pytest fixture.
 
@@ -38,7 +40,7 @@ def ndim(request):
 ###############################################################################
 # Tests
 
-def test_configuration():
+def test_configuration() -> None:
     """ test standard instance configuration """
     inst = AxisAlignedBoundingBox([0, 1], [1, 2])
     for i in configuration_test_helper(inst):  # type: AxisAlignedBoundingBox
@@ -46,7 +48,7 @@ def test_configuration():
         numpy.testing.assert_allclose(i.max_vertex, (1, 2))
 
 
-def test_bbox_set_vertices(ndim, seq_type):
+def test_bbox_set_vertices(ndim: int, seq_type: Any) -> None:
     """
     Test constructing an AxisAlignedBoundingBox with ``ndim`` coordinates.
     """
@@ -66,7 +68,7 @@ def test_bbox_set_vertices(ndim, seq_type):
     numpy.testing.assert_allclose(m_bb.max_vertex, maxv)
 
 
-def test_bbox_set_vertices_maintain_type_int():
+def test_bbox_set_vertices_maintain_type_int() -> None:
     """
     Test that ndarray dtypes inherit from input integer values explicitly.
     """
@@ -84,7 +86,7 @@ def test_bbox_set_vertices_maintain_type_int():
     assert issubclass(m_bb.max_vertex.dtype.type, numpy.integer)
 
 
-def test_bbox_set_vertices_maintain_type_float():
+def test_bbox_set_vertices_maintain_type_float() -> None:
     """
     Test that ndarray dtypes inherit from input float values explicitly.
     """
@@ -98,11 +100,11 @@ def test_bbox_set_vertices_maintain_type_float():
     AxisAlignedBoundingBox._set_vertices(m_bb, minv, maxv)
 
     # BOTH vertices should be integer since input coordinates are integers.
-    assert issubclass(m_bb.min_vertex.dtype.type, numpy.double)
-    assert issubclass(m_bb.max_vertex.dtype.type, numpy.double)
+    assert issubclass(m_bb.min_vertex.dtype.type, numpy.float64)
+    assert issubclass(m_bb.max_vertex.dtype.type, numpy.float64)
 
 
-def test_bbox_set_vertices_maintain_type_mixed():
+def test_bbox_set_vertices_maintain_type_mixed() -> None:
     """
     Test that ndarray dtypes inherit from mixed float and integer values
     explicitly.
@@ -115,17 +117,17 @@ def test_bbox_set_vertices_maintain_type_mixed():
     maxv = [1, 2.0, 3]  # float
     AxisAlignedBoundingBox._set_vertices(m_bb, minv, maxv)
     assert issubclass(m_bb.min_vertex.dtype.type, numpy.integer)
-    assert issubclass(m_bb.max_vertex.dtype.type, numpy.double)
+    assert issubclass(m_bb.max_vertex.dtype.type, numpy.float64)
 
     # Float/Integer coordinates (3d)
-    minv = [0, 1, 2.0]  # float
-    maxv = [1, 2, 3]  # integer
+    minv = [0, 1, 2.0]  # type: ignore  # float
+    maxv = [1, 2, 3]    # type: ignore  # integer
     AxisAlignedBoundingBox._set_vertices(m_bb, minv, maxv)
-    assert issubclass(m_bb.min_vertex.dtype.type, numpy.double)
+    assert issubclass(m_bb.min_vertex.dtype.type, numpy.float64)
     assert issubclass(m_bb.max_vertex.dtype.type, numpy.integer)
 
 
-def test_bbox_construction_incongruous_shape():
+def test_bbox_construction_incongruous_shape() -> None:
     """
     Test that construction fails when one or both input coordinates are not a
     single array dimension (i.e. multi-dimensional shape in numpy.array
@@ -142,22 +144,22 @@ def test_bbox_construction_incongruous_shape():
                                          r"\(min_vertex\.ndim == 2, "
                                          r"max_vertex\.ndim == 1\)\."):
         # noinspection PyTypeChecker
-        AxisAlignedBoundingBox(minp_2dim, maxp_1dim)
+        AxisAlignedBoundingBox(minp_2dim, maxp_1dim)  # type: ignore
     with pytest.raises(ValueError, match=r"One or both vertices provided had "
                                          r"more than one array dimension "
                                          r"\(min_vertex\.ndim == 1, "
                                          r"max_vertex\.ndim == 2\)\."):
         # noinspection PyTypeChecker
-        AxisAlignedBoundingBox(minp_1dim, maxp_2dim)
+        AxisAlignedBoundingBox(minp_1dim, maxp_2dim)  # type: ignore
     with pytest.raises(ValueError, match=r"One or both vertices provided had "
                                          r"more than one array dimension "
                                          r"\(min_vertex\.ndim == 2, "
                                          r"max_vertex\.ndim == 2\)\."):
         # noinspection PyTypeChecker
-        AxisAlignedBoundingBox(minp_2dim, maxp_2dim)
+        AxisAlignedBoundingBox(minp_2dim, maxp_2dim)  # type: ignore
 
 
-def test_bbox_construction_incongruous_dimensionality():
+def test_bbox_construction_incongruous_dimensionality() -> None:
     """
     Test that construction fails if min and max coordinates are not of the same
     dimensionality.
@@ -172,7 +174,7 @@ def test_bbox_construction_incongruous_dimensionality():
         AxisAlignedBoundingBox(minp, maxp)
 
 
-def test_bbox_construction_maxp_not_greater():
+def test_bbox_construction_maxp_not_greater() -> None:
     """
     Test the check that the max-coordinate must be >= min-coordinate.
     """
@@ -184,7 +186,7 @@ def test_bbox_construction_maxp_not_greater():
         AxisAlignedBoundingBox(minp, maxp)
 
 
-def test_bbox_str():
+def test_bbox_str() -> None:
     """
     Test that __str__ returns without error.
     """
@@ -192,7 +194,7 @@ def test_bbox_str():
         "<AxisAlignedBoundingBox [[0], [1.2]]>"
 
 
-def test_bbox_repr():
+def test_bbox_repr() -> None:
     """
     Test that __repr__ returns without error.
     """
@@ -201,7 +203,7 @@ def test_bbox_repr():
         "min_vertex=[0] max_vertex=[1.2]>"
 
 
-def test_bbox_hash():
+def test_bbox_hash() -> None:
     """
     Test expected hashing of bounding box.
     """
@@ -211,7 +213,7 @@ def test_bbox_hash():
     assert hash(AxisAlignedBoundingBox(p1, p2)) == expected_hash
 
 
-def test_bbox_equality_with_self():
+def test_bbox_equality_with_self() -> None:
     """
     Test that a bounding box is equal to itself.
     """
@@ -219,7 +221,7 @@ def test_bbox_equality_with_self():
     assert bb == bb  # lgtm[py/comparison-of-identical-expressions]
 
 
-def test_bbox_equality_other_is_copy():
+def test_bbox_equality_other_is_copy() -> None:
     """
     Test that a bounding box is equal to an equivalent other bounding box
     instance.
@@ -229,7 +231,7 @@ def test_bbox_equality_other_is_copy():
     assert bb1 == bb2
 
 
-def test_bbox_equality_other_is_close():
+def test_bbox_equality_other_is_close() -> None:
     """
     Test that a bounding box is equal to an equivalent other bounding box
     instance.
@@ -252,7 +254,7 @@ def test_bbox_equality_other_is_close():
                    new_callable=mock.PropertyMock)
 @mock.patch.object(AxisAlignedBoundingBox, 'EQUALITY_RTOL',
                    new_callable=mock.PropertyMock)
-def test_bbox_equality_other_not_close_enough(m_bbox_rtol, m_bbox_atol):
+def test_bbox_equality_other_not_close_enough(m_bbox_rtol: int, m_bbox_atol: int) -> None:
     """
     Test modifying tolerance values
     :return:
@@ -269,12 +271,12 @@ def test_bbox_equality_other_not_close_enough(m_bbox_rtol, m_bbox_atol):
     assert (bb1.max_vertex != bb2.max_vertex).all()
 
     # If we reduce the tolerances, the 1e-8 difference will become intolerable.
-    m_bbox_rtol.return_value = 1.e-10
-    m_bbox_atol.return_value = 1.e-16
+    m_bbox_rtol.return_value = 1.e-10  # type: ignore
+    m_bbox_atol.return_value = 1.e-16  # type: ignore
     assert not (bb1 == bb2)
 
 
-def test_bbox_equality_other_not_close():
+def test_bbox_equality_other_not_close() -> None:
     """
     Test that other bbox is not equal when bbox is sufficiently different.
     """
@@ -284,7 +286,7 @@ def test_bbox_equality_other_not_close():
     assert not (bb1 == bb2)
 
 
-def test_bbox_equality_other_not_bbox():
+def test_bbox_equality_other_not_bbox() -> None:
     """
     Test that equality fails when the RHS is not a bounding box instance.
     """
@@ -293,7 +295,7 @@ def test_bbox_equality_other_not_bbox():
 
 
 @mock.patch('smqtk_image_io.AxisAlignedBoundingBox.__eq__')
-def test_bbox_not_equal(m_bbox_eq):
+def test_bbox_not_equal(m_bbox_eq: mock.MagicMock) -> None:
     """
     Test that non-equality is just calling the __eq__ in
     AxisAlignedBoundingBox.
@@ -311,7 +313,7 @@ def test_bbox_not_equal(m_bbox_eq):
     m_bbox_eq.assert_called_once_with(bb2)
 
 
-def test_getstate_format():
+def test_getstate_format() -> None:
     """
     Test expected __getstate__ format.
     """
@@ -326,7 +328,7 @@ def test_getstate_format():
     assert bb1.__getstate__() == expected_state
 
 
-def test_setstate_format():
+def test_setstate_format() -> None:
     """
     Test expected state format compatible with setstate
     """
@@ -343,7 +345,7 @@ def test_setstate_format():
     numpy.testing.assert_allclose(bb.max_vertex, expected_max_v)
 
 
-def test_serialize_deserialize_pickle():
+def test_serialize_deserialize_pickle() -> None:
     """
     Test expected state representation.
     """
@@ -358,7 +360,7 @@ def test_serialize_deserialize_pickle():
     numpy.testing.assert_allclose(bb2.max_vertex, max_v)
 
 
-def test_bbox_get_config_from_config():
+def test_bbox_get_config_from_config() -> None:
     """
     Test that the expected configuration form is returned and can be turned
     around to create an equivalent AxisAlignedBoundingBox instance.
@@ -384,7 +386,7 @@ def test_bbox_get_config_from_config():
     assert bb2_config == bb1_config
 
 
-def test_bbox_ndim(ndim):
+def test_bbox_ndim(ndim: int) -> None:
     """
     Test that the ``ndim`` property correctly reflects the dimensionality of
     the coordinates stored.
@@ -396,7 +398,7 @@ def test_bbox_ndim(ndim):
     assert bb.ndim == ndim
 
 
-def test_bbox_deltas_1d():
+def test_bbox_deltas_1d() -> None:
     """
     Test that `deltas` property returns the correct value for an example 1D
     region.
@@ -408,7 +410,7 @@ def test_bbox_deltas_1d():
                                   expected)
 
 
-def test_bbox_deltas_2d():
+def test_bbox_deltas_2d() -> None:
     """
     Test that `deltas` property returns the correct value for an example 1D
     region.
@@ -420,7 +422,7 @@ def test_bbox_deltas_2d():
                                   expected)
 
 
-def test_bbox_deltas_3d():
+def test_bbox_deltas_3d() -> None:
     """
     Test that `deltas` property returns the correct value for an example 1D
     region.
@@ -432,7 +434,7 @@ def test_bbox_deltas_3d():
                                   expected)
 
 
-def test_bbox_deltas_4d():
+def test_bbox_deltas_4d() -> None:
     """
     Test that `deltas` property returns the correct value for an example 1D
     region.
@@ -444,7 +446,7 @@ def test_bbox_deltas_4d():
                                   expected)
 
 
-def test_bbox_dtype():
+def test_bbox_dtype() -> None:
     """
     Test getting the representative dtype of the bounding box, including mix
     vertex array types
@@ -452,18 +454,16 @@ def test_bbox_dtype():
     # int
     bb = AxisAlignedBoundingBox([0], [1])
     assert issubclass(bb.dtype.type, numpy.signedinteger)
-
     bb = AxisAlignedBoundingBox(numpy.array([0], dtype=numpy.uint8),
                                 numpy.array([1], dtype=numpy.uint8))
     assert issubclass(bb.dtype.type, numpy.uint8)
-
     bb = AxisAlignedBoundingBox(numpy.array([0], dtype=numpy.uint8),
                                 numpy.array([1], dtype=numpy.uint32))
     assert issubclass(bb.dtype.type, numpy.uint32)
 
     # float
     bb = AxisAlignedBoundingBox([0.], [1.])
-    assert issubclass(bb.dtype.type, numpy.double)
+    assert issubclass(bb.dtype.type, numpy.float64)
 
     bb = AxisAlignedBoundingBox(numpy.array([0], dtype=numpy.float32),
                                 numpy.array([1], dtype=numpy.float16))
@@ -471,12 +471,12 @@ def test_bbox_dtype():
 
     # mixed
     bb = AxisAlignedBoundingBox([0], [1.0])
-    assert issubclass(bb.dtype.type, numpy.double)
+    assert issubclass(bb.dtype.type, numpy.float64)
     bb = AxisAlignedBoundingBox([0.0], [1])
-    assert issubclass(bb.dtype.type, numpy.double)
+    assert issubclass(bb.dtype.type, numpy.float64)
 
 
-def test_bbox_hypervolume_1(ndim):
+def test_bbox_hypervolume_1(ndim: int) -> None:
     """
     Test that we get the expected 1-area from various 1-area hyper-cubes.
     """
@@ -486,7 +486,7 @@ def test_bbox_hypervolume_1(ndim):
     assert AxisAlignedBoundingBox(minp, maxp).hypervolume == expected_area
 
 
-def test_bbox_hypervolume_other():
+def test_bbox_hypervolume_other() -> None:
     """
     Test that we get the expected non-trivial area for bboxes of various
     dimensions.
@@ -516,7 +516,7 @@ def test_bbox_hypervolume_other():
     assert AxisAlignedBoundingBox(minp, maxp).hypervolume == expected_area
 
 
-def test_bbox_intersection():
+def test_bbox_intersection() -> None:
     """
     Test expected return when there is a valid intersection.
     """
@@ -547,7 +547,7 @@ def test_bbox_intersection():
     assert bb2.intersection(bb1) == expected
 
 
-def test_bbox_no_intersection():
+def test_bbox_no_intersection() -> None:
     """
     Test that the expected conditions result in no intersection.
     """
