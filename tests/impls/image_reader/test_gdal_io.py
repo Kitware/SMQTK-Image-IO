@@ -418,9 +418,8 @@ class TestGdalImageReader (unittest.TestCase):
         """
         empty_de = DataMemoryElement(readonly=True, content_type='image/png')
         assert empty_de.is_empty()
-        msg = "GdalImageReader cannot load 0-sized data (no bytes in {})." \
-            .format(empty_de)
-        with pytest.raises(ValueError, match=re.escape(msg)):
+        msg = "GdalImageReader cannot load 0-sized data"
+        with pytest.raises(ValueError, match=msg):
             GdalImageReader().load_as_matrix(empty_de)
 
     def test_load_as_matrix_tempfile(self):

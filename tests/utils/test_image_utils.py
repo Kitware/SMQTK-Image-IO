@@ -67,61 +67,6 @@ class TestIsValidElement(unittest.TestCase):
     def test_invalid_image_returns_false(self):
         assert is_valid_element(self.non_image, check_image=True) is False
 
-
-@pytest.mark.skip(reason="need to replace check images from SMQTK/bin")
-class TestCheckImageCli(unittest.TestCase):
-
-    @staticmethod
-    def check_images():
-        """ Simulate execution of check_images utility main. """
-        saved_stdout, saved_stderr = sys.stdout, sys.stderr
-
-        out, err = StringIO(), StringIO()
-        try:
-            sys.stdout, sys.stderr = out, err
-            check_images_main()  # noqa: F821
-        except SystemExit as ex:
-            print("Encountered SystemExit exception, code {}".format(ex.code))
-        finally:
-            stdout, stderr = out.getvalue().strip(), err.getvalue().strip()
-            sys.stdout, sys.stderr = saved_stdout, saved_stderr
-
-        return stdout, stderr
-
-    def test_base_case(self):
-        # noinspection PyUnresolvedReferences
-        with mock.patch.object(sys, 'argv', ['']):
-            assert 'Validate a list of images returning the filepaths' in \
-                self.check_images()[0]
-
-    def test_check_images(self):
-        # Create test file with a valid, invalid, and non-existent image
-        _, filename = tempfile.mkstemp()
-
-        with open(filename, 'w') as outfile:
-            outfile.write(os.path.join(TEST_DATA_DIR, 'Lenna.png') + '\n')
-            outfile.write(os.path.join(TEST_DATA_DIR, 'test_file.dat') + '\n')
-            outfile.write(os.path.join(TEST_DATA_DIR, 'non-existent-file.jpeg'))
-
-        # noinspection PyUnresolvedReferences
-        with mock.patch.object(sys, 'argv', ['', '--file-list', filename]):
-            out, err = self.check_images()
-
-            assert out == ','.join([os.path.join(TEST_DATA_DIR, 'Lenna.png'),
-                                    '3ee0d360dc12003c0d43e3579295b52b64906e85'])
-            assert 'non-existent-file.jpeg' not in out
-
-        # noinspection PyUnresolvedReferences
-        with mock.patch.object(sys, 'argv',
-                               ['', '--file-list', filename, '--invert']):
-            out, err = self.check_images()
-
-            assert out == ','.join([os.path.join(TEST_DATA_DIR,
-                                                 'test_file.dat'),
-                                    'da39a3ee5e6b4b0d3255bfef95601890afd80709'])
-            assert 'non-existent-file.jpeg' not in out
-
-
 class TestCropInBounds(object):
     """
     Test using the ``crop_in_bounds`` function.
