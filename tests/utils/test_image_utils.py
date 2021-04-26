@@ -1,11 +1,5 @@
-import unittest.mock as mock
 import os
-import sys
-import tempfile
 import unittest
-import pytest
-
-from six.moves import StringIO
 
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
 from smqtk_dataprovider.impls.data_element.file import DataFileElement
@@ -66,6 +60,7 @@ class TestIsValidElement(unittest.TestCase):
 
     def test_invalid_image_returns_false(self):
         assert is_valid_element(self.non_image, check_image=True) is False
+
 
 class TestCropInBounds(object):
     """
