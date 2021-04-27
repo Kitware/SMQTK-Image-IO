@@ -15,11 +15,10 @@ from smqtk_image_io.impls.image_reader.gdal_io import (
     get_gdal_driver_supported_mimetypes,
     load_dataset_tempfile,
     load_dataset_vsimem,
-    GdalImageReader,
+    GdalImageReader
 )
 from smqtk_image_io.impls.image_reader import gdal_io
-from smqtk_image_io import AxisAlignedBoundingBox
-from smqtk_dataprovider import DataElement
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
 from smqtk_dataprovider.impls.data_element.file import DataFileElement
 from smqtk_dataprovider.impls.data_element.memory import DataMemoryElement
 from smqtk_core.configuration import configuration_test_helper

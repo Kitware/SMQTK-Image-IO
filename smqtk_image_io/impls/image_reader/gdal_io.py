@@ -6,7 +6,6 @@ from typing import Dict, Optional, List, Sequence, Set, Union
 import warnings
 
 import numpy as np
-import six
 from six.moves import range
 
 from smqtk_image_io.interfaces.image_reader import ImageReader
@@ -406,8 +405,9 @@ class GdalImageReader (ImageReader):
 
         """
         if data_element.is_empty():
-            raise ValueError("{} cannot load 0-sized data (no bytes in {})."
-                             .format(self.name, data_element))
+            raise ValueError(
+                "GdalImageReader cannot load 0-sized data (no bytes in {})."
+                .format(data_element))
         load_cm = self.LOAD_METHOD_CONTEXTMANAGERS[self._load_method]
         with load_cm(data_element) as gdal_ds:  # type: gdal.Dataset
             img_width = gdal_ds.RasterXSize

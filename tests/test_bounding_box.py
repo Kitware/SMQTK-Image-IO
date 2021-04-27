@@ -6,7 +6,7 @@ import pytest
 
 import unittest.mock as mock
 
-from smqtk_image_io import AxisAlignedBoundingBox
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
 from smqtk_core.configuration import configuration_test_helper
 
 
@@ -98,8 +98,8 @@ def test_bbox_set_vertices_maintain_type_float():
     AxisAlignedBoundingBox._set_vertices(m_bb, minv, maxv)
 
     # BOTH vertices should be integer since input coordinates are integers.
-    assert issubclass(m_bb.min_vertex.dtype.type, numpy.float)
-    assert issubclass(m_bb.max_vertex.dtype.type, numpy.float)
+    assert issubclass(m_bb.min_vertex.dtype.type, numpy.double)
+    assert issubclass(m_bb.max_vertex.dtype.type, numpy.double)
 
 
 def test_bbox_set_vertices_maintain_type_mixed():
@@ -115,13 +115,13 @@ def test_bbox_set_vertices_maintain_type_mixed():
     maxv = [1, 2.0, 3]  # float
     AxisAlignedBoundingBox._set_vertices(m_bb, minv, maxv)
     assert issubclass(m_bb.min_vertex.dtype.type, numpy.integer)
-    assert issubclass(m_bb.max_vertex.dtype.type, numpy.float)
+    assert issubclass(m_bb.max_vertex.dtype.type, numpy.double)
 
     # Float/Integer coordinates (3d)
     minv = [0, 1, 2.0]  # float
     maxv = [1, 2, 3]  # integer
     AxisAlignedBoundingBox._set_vertices(m_bb, minv, maxv)
-    assert issubclass(m_bb.min_vertex.dtype.type, numpy.float)
+    assert issubclass(m_bb.min_vertex.dtype.type, numpy.double)
     assert issubclass(m_bb.max_vertex.dtype.type, numpy.integer)
 
 
@@ -197,7 +197,7 @@ def test_bbox_repr():
     Test that __repr__ returns without error.
     """
     assert repr(AxisAlignedBoundingBox([0], [1.2])) == \
-        "<smqtk_image_io.AxisAlignedBoundingBox " \
+        "<smqtk_image_io.bbox.AxisAlignedBoundingBox " \
         "min_vertex=[0] max_vertex=[1.2]>"
 
 
@@ -463,7 +463,7 @@ def test_bbox_dtype():
 
     # float
     bb = AxisAlignedBoundingBox([0.], [1.])
-    assert issubclass(bb.dtype.type, numpy.float)
+    assert issubclass(bb.dtype.type, numpy.double)
 
     bb = AxisAlignedBoundingBox(numpy.array([0], dtype=numpy.float32),
                                 numpy.array([1], dtype=numpy.float16))
@@ -471,9 +471,9 @@ def test_bbox_dtype():
 
     # mixed
     bb = AxisAlignedBoundingBox([0], [1.0])
-    assert issubclass(bb.dtype.type, numpy.float)
+    assert issubclass(bb.dtype.type, numpy.double)
     bb = AxisAlignedBoundingBox([0.0], [1])
-    assert issubclass(bb.dtype.type, numpy.float)
+    assert issubclass(bb.dtype.type, numpy.double)
 
 
 def test_bbox_hypervolume_1(ndim):
