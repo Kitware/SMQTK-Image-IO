@@ -7,6 +7,8 @@ from smqtk_image_io.bbox import AxisAlignedBoundingBox
 from smqtk_dataprovider import DataElement
 from smqtk_dataprovider.impls.data_element.matrix import MatrixDataElement
 
+from typing import Dict, Any, Set
+
 
 class DummyImageReader (ImageReader):
     """
@@ -14,16 +16,16 @@ class DummyImageReader (ImageReader):
     """
 
     @classmethod
-    def is_usable(cls):
+    def is_usable(cls) -> bool:
         # from Pluggable
         # Required to be True to construct a dummy instance.
         return True
 
-    def get_config(self):
+    def get_config(self) -> Dict[str, Any]:
         # from Configurable
         raise NotImplementedError()
 
-    def valid_content_types(self):
+    def valid_content_types(self) -> Set[str]:
         # from ContentTypeValidator
         raise NotImplementedError()
 
@@ -31,11 +33,14 @@ class DummyImageReader (ImageReader):
     # ImageReader abstract methods
     #
 
-    def _load_as_matrix(self, data_element, pixel_crop=None):
+    def _load_as_matrix(
+        self, data_element: DataElement,
+            pixel_crop: AxisAlignedBoundingBox = None) \
+            -> np.ndarray:
         raise NotImplementedError()
 
 
-def test_is_valid_element_no_matrix():
+def test_is_valid_element_no_matrix() -> None:
     """
     Test handling the DataElement instances without a matrix property (i.e.
     "normal" way).
@@ -43,7 +48,7 @@ def test_is_valid_element_no_matrix():
     test_de = mock.MagicMock(spec=DataElement)
 
     m_inst = DummyImageReader()
-    m_inst.valid_content_types = mock.MagicMock(return_value={'a', 'b'})
+    m_inst.valid_content_types = mock.MagicMock(return_value={'a', 'b'})  # type: ignore
 
     test_de.content_type.return_value = 'a'
     assert ImageReader.is_valid_element(m_inst, test_de)
@@ -60,7 +65,7 @@ def test_is_valid_element_no_matrix():
     assert m_inst.valid_content_types.call_count == 3
 
 
-def test_is_valid_element_has_matrix():
+def test_is_valid_element_has_matrix() -> None:
     """
     Test handling a DataElement instance that does have a ``matrix`` property
     """
@@ -75,7 +80,7 @@ def test_is_valid_element_has_matrix():
     assert ImageReader.is_valid_element(m_inst, test_de)
 
 
-def test_is_valid_element_has_matrix_invalid_value_type():
+def test_is_valid_element_has_matrix_invalid_value_type() -> None:
     """
     Test that exception is raise if found matrix attribute value is of an
     unexpected type.
@@ -90,7 +95,7 @@ def test_is_valid_element_has_matrix_invalid_value_type():
         ImageReader.is_valid_element(m_inst, test_de)
 
 
-def test_load_as_matrix_crop_zero_volume():
+def test_load_as_matrix_crop_zero_volume() -> None:
     """
     Test that a ValueError is raised when a crop bbox is passed with zero
     volume.
@@ -104,7 +109,7 @@ def test_load_as_matrix_crop_zero_volume():
         ImageReader.load_as_matrix(m_reader, m_data, pixel_crop=crop_bb)
 
 
-def test_load_as_matrix_crop_not_integer():
+def test_load_as_matrix_crop_not_integer() -> None:
     """
     Test that a ValueError is raised when the pixel crop bbox provided does not
     report an integer type as its dtype.
@@ -122,7 +127,7 @@ def test_load_as_matrix_crop_not_integer():
         ImageReader.load_as_matrix(m_reader, m_data, pixel_crop=crop_bb)
 
 
-def test_load_as_matrix_bad_content_type():
+def test_load_as_matrix_bad_content_type() -> None:
     """
     Test that base abstract method raises an exception when data element
     content type is a mismatch compared to reported ``valid_content_types``.
@@ -131,7 +136,7 @@ def test_load_as_matrix_bad_content_type():
           of parent classes.
     """
     m_reader = DummyImageReader()
-    m_reader.valid_content_types = mock.Mock(return_value=set())
+    m_reader.valid_content_types = mock.Mock(return_value=set())  # type: ignore
 
     #: :type: DataElement
     m_e = mock.Mock(spec_set=DataElement)
@@ -142,7 +147,7 @@ def test_load_as_matrix_bad_content_type():
         ImageReader.load_as_matrix(m_reader, m_e)
 
 
-def test_load_as_matrix_property_shortcut():
+def test_load_as_matrix_property_shortcut() -> None:
     """
     Test that if the data-element provided has the ``matrix`` attribute, that is
     returned directly.  This is intended for use
@@ -167,7 +172,7 @@ def test_load_as_matrix_property_shortcut():
     m_reader._load_as_matrix.assert_not_called()
 
 
-def test_load_as_matrix_success():
+def test_load_as_matrix_success() -> None:
     """
     Test successfully passing ``load_as_matrix`` and invoking implementation
     defined ``_load_as_matrix`` method (no ``matrix`` property on data elem).

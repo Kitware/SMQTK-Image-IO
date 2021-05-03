@@ -3,7 +3,9 @@ import abc
 import numpy
 
 from smqtk_core import Plugfigurable
-from smqtk_dataprovider import ContentTypeValidator
+from smqtk_dataprovider import ContentTypeValidator, DataElement
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from typing import Optional
 
 
 class ImageReader (Plugfigurable, ContentTypeValidator):
@@ -15,7 +17,7 @@ class ImageReader (Plugfigurable, ContentTypeValidator):
     __slots__ = ()
 
     @staticmethod
-    def _get_matrix_property(data_element):
+    def _get_matrix_property(data_element: DataElement) -> Optional[numpy.ndarray]:
         """
         Central method of getting and checking the matrix property of a
         DataElement.
@@ -30,13 +32,14 @@ class ImageReader (Plugfigurable, ContentTypeValidator):
 
         :return: Matrix property value if it is None or an ndarray.
         """
-        mat_prop = data_element.matrix
+
+        mat_prop = data_element.matrix  # type: ignore
         assert mat_prop is None or isinstance(mat_prop, numpy.ndarray), \
             "Element `matrix` property return should either be a matrix " \
             "or None. Got {} instead.".format(type(mat_prop))
         return mat_prop
 
-    def is_valid_element(self, data_element):
+    def is_valid_element(self, data_element: DataElement) -> bool:
         """
         Check if the given DataElement instance reports a content type that
         matches one of the MIME types reported by ``valid_content_types``.
@@ -61,7 +64,10 @@ class ImageReader (Plugfigurable, ContentTypeValidator):
             return super(ImageReader, self)\
                 .is_valid_element(data_element)
 
-    def load_as_matrix(self, data_element, pixel_crop=None):
+    def load_as_matrix(
+        self, data_element: DataElement,
+            pixel_crop: Optional[AxisAlignedBoundingBox] = None) \
+            -> Optional[numpy.ndarray]:
         """
         Load an image matrix from the given data element.
 
@@ -126,7 +132,10 @@ class ImageReader (Plugfigurable, ContentTypeValidator):
             return self._load_as_matrix(data_element, pixel_crop=pixel_crop)
 
     @abc.abstractmethod
-    def _load_as_matrix(self, data_element, pixel_crop=None):
+    def _load_as_matrix(
+        self, data_element: DataElement,
+            pixel_crop: Optional[AxisAlignedBoundingBox] = None) \
+            -> numpy.ndarray:
         """
         Internal method to be implemented that attempts loading an image
         from the given data element and returning it as an image matrix.

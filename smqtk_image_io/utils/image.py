@@ -1,6 +1,6 @@
 import io
 import logging
-from typing import Generator, Tuple
+from typing import Generator, Tuple, Iterable, Optional
 
 import numpy
 import PIL.Image
@@ -9,9 +9,10 @@ import PIL.ImageEnhance
 from six.moves import range
 
 from smqtk_dataprovider import DataElement
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
 
 
-def is_loadable_image(data_element):
+def is_loadable_image(data_element: DataElement) -> bool:
     """
     Determine if an image is able to be loaded by PIL.
 
@@ -37,8 +38,10 @@ def is_loadable_image(data_element):
         return False
 
 
-def is_valid_element(data_element, valid_content_types=None,
-                     check_image=False):
+def is_valid_element(
+    data_element: DataElement,
+        valid_content_types: Optional[Iterable] = None,
+        check_image: bool = False) -> bool:
     """
     Determines if a given data element is valid.
 
@@ -106,7 +109,9 @@ def image_crop_center_levels(
         yield i, image.crop(t[0] + t[1])
 
 
-def image_crop_quadrant_pyramid(image, n_levels):
+def image_crop_quadrant_pyramid(
+    image: PIL.Image.Image, n_levels: int) \
+        -> Generator[Tuple[int, Tuple[int, int], PIL.Image.Image], None, None]:
     """
     Generate a number of crops based on a number of quadrant sub-partitions
     made based on the given number of levels.
@@ -148,7 +153,10 @@ def image_crop_quadrant_pyramid(image, n_levels):
                 )
 
 
-def image_crop_tiles(image, tile_width, tile_height, stride=None):
+def image_crop_tiles(
+    image: PIL.Image.Image, tile_width: int, tile_height: int,
+        stride: Optional[Tuple[int, int]] = None) \
+            -> Generator[Tuple[int, int, PIL.Image.Image], None, None]:
     """
     Crop out tile windows from the base image that have the width and height
     specified.
@@ -193,7 +201,8 @@ def image_crop_tiles(image, tile_width, tile_height, stride=None):
         y += stride_y
 
 
-def image_brightness_intervals(image, n):
+def image_brightness_intervals(image: PIL.Image.Image, n: int) \
+        -> Generator[Tuple[int, PIL.Image.Image], None, None]:
     """
     Generate a number of images with different brightness levels using linear
     interpolation to choose levels between 0 (black) and 1 (original image) as
@@ -214,7 +223,8 @@ def image_brightness_intervals(image, n):
         yield v, PIL.ImageEnhance.Brightness(image).enhance(v)
 
 
-def image_contrast_intervals(image, n):
+def image_contrast_intervals(image: PIL.Image.Image, n: int) \
+        -> Generator[Tuple[int, PIL.Image.Image], None, None]:
     """
     Generate a number of images with different contrast levels using linear
     interpolation to choose levels between 0 (black) and 1 (original image) as
@@ -235,7 +245,9 @@ def image_contrast_intervals(image, n):
         yield v, PIL.ImageEnhance.Contrast(image).enhance(v)
 
 
-def crop_in_bounds(bbox, im_width, im_height):
+def crop_in_bounds(
+    bbox: AxisAlignedBoundingBox, im_width: int,
+        im_height: int) -> bool:
     """
     Check if this crop specification is within a given parent bounds
     specification.

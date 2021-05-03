@@ -5,6 +5,8 @@ import numpy
 
 from smqtk_core import Configurable
 
+from typing import Tuple, Dict, Optional, Sequence, Union
+
 
 class AxisAlignedBoundingBox (Configurable):
     """
@@ -34,7 +36,9 @@ class AxisAlignedBoundingBox (Configurable):
     EQUALITY_ATOL = 1.e-8
     EQUALITY_RTOL = 1.e-5
 
-    def __init__(self, min_vertex, max_vertex):
+    def __init__(
+        self, min_vertex: Sequence[Union[int, float]],
+            max_vertex: Sequence[Union[int, float]]) -> None:
         """
         Create a new AxisAlignedBoundingBox from the given minimum and maximum
         euclidean-space vertex.
@@ -70,19 +74,19 @@ class AxisAlignedBoundingBox (Configurable):
             raise ValueError("The maximum vertex was not strictly >= the "
                              "minimum vertex.")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<{} [{}, {}]>"\
             .format(self.__class__.__name__, self.min_vertex, self.max_vertex)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<{}.{} min_vertex={} max_vertex={}>"\
             .format(self.__class__.__module__, self.__class__.__name__,
                     self.min_vertex, self.max_vertex)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((tuple(self.min_vertex), tuple(self.max_vertex)))
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """
         Two bounding boxes are equal if the describe the same spatial area.
 
@@ -102,31 +106,33 @@ class AxisAlignedBoundingBox (Configurable):
                                rtol=self.EQUALITY_RTOL,
                                atol=self.EQUALITY_ATOL))
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         return not (self == other)
 
-    def __getstate__(self):
+    def __getstate__(self) -> Tuple:
         return (
             self.min_vertex.tolist(),
             self.max_vertex.tolist(),
         )
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: Tuple) -> None:
         self._set_vertices(*state)
 
-    def _set_vertices(self, min_v, max_v):
+    def _set_vertices(
+        self, min_v: Sequence[Union[int, float]],
+            max_v: Sequence[Union[int, float]]) -> None:
         self.min_vertex = numpy.asarray(min_v)
         self.min_vertex.flags.writeable = False
         self.max_vertex = numpy.asarray(max_v)
         self.max_vertex.flags.writeable = False
 
-    def get_config(self):
+    def get_config(self) -> Dict:
         return {
             'min_vertex': self.min_vertex.tolist(),
             'max_vertex': self.max_vertex.tolist(),
         }
 
-    def intersection(self, other):
+    def intersection(self, other: "AxisAlignedBoundingBox") -> Optional["AxisAlignedBoundingBox"]:
         """
         Get the AxisAlignedBoundingBox that represents the intersection between
         this box and the given ``other`` box.
@@ -139,7 +145,7 @@ class AxisAlignedBoundingBox (Configurable):
             or None if there is no intersection.
         :rtype: AxisAlignedBoundingBox | None
         """
-        inter_min_v = numpy.maximum(self.min_vertex, other.min_vertex)
+        inter_min_v = numpy.maximum(self.min_vertex, other.min_vertex)  # type: ignore
         inter_max_v = numpy.minimum(self.max_vertex, other.max_vertex)
         # Constructor allows zero area boxes, but that is not a valid
         # intersection. Returning None if the minimum of the difference between
@@ -149,7 +155,7 @@ class AxisAlignedBoundingBox (Configurable):
         return AxisAlignedBoundingBox(inter_min_v, inter_max_v)
 
     @property
-    def ndim(self):
+    def ndim(self) -> int:
         """
         :return: The number of dimensions this bounding volume covers.
         :rtype: int
@@ -160,7 +166,7 @@ class AxisAlignedBoundingBox (Configurable):
         return self.min_vertex.size
 
     @property
-    def deltas(self):
+    def deltas(self) -> numpy.ndarray:
         """
         Get the lengths of this bounding box's edges along its dimensions.
 
@@ -173,7 +179,7 @@ class AxisAlignedBoundingBox (Configurable):
         return self.max_vertex - self.min_vertex
 
     @property
-    def dtype(self):
+    def dtype(self) -> numpy.dtype:
         """
         :return: Most representative data type required to fully express this
             bounding box.
@@ -182,7 +188,7 @@ class AxisAlignedBoundingBox (Configurable):
         return self.deltas.dtype
 
     @property
-    def hypervolume(self):
+    def hypervolume(self) -> float:
         """
         :return: The volume of this [hyper-dimensional] spatial bounding box.
             Unit of volume depends on the dimensionality of the vertices
