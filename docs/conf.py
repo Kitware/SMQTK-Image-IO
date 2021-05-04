@@ -16,16 +16,16 @@ root_path = Path(__file__).absolute().parent.parent
 sys.path.insert(0, str(root_path))
 
 # Helper imports from repo root
-from setup import VERSION
+import smqtk_image_io
 
 # -- Project information -----------------------------------------------------
 
-project = 'SMQTK'
+project = 'SMQTK-Image-IO'
 copyright = '2015, Kitware, Inc.'
 author = 'Kitware, Inc.'
 
 # The full version, including alpha/beta/rc tags
-release = VERSION
+release = smqtk_image_io.__version__
 
 
 # -- General configuration ---------------------------------------------------

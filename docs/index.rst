@@ -1,22 +1,16 @@
-.. SMQTK documentation master file, created by
-   sphinx-quickstart on Thu Oct 22 16:40:18 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Social Media Query ToolKit -- Image-IO
+======================================
 
-Social Media Query ToolKit
-==========================
+`GitHub <https://github.com/Kitware/SMQTK-Image-IO>`_
 
-`GitHub <https://github.com/Kitware/SMQTK>`_
-
-Python toolkit for pluggable algorithms and data structures for multimedia-based machine learning.
+Interfaces around loading and storing operations for imagery.
 
 .. toctree::
    :maxdepth: 2
 
    installation
-   quickstarts
-   architecture
-   examples/overview
+   image_io_interfaces
+   image_io_implementations
    releasing
 
 Indices and tables
