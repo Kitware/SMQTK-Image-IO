@@ -1,0 +1,32 @@
+v0.15.0
+=======
+
+This is the initial release of ``smqtk-image-io``, spinning off from
+v0.14.0 of the monolithic `SMQTK`_ library.
+
+.. _smqtk: https://github.com/kitware/smqtk
+
+
+Updates / New Features
+----------------------
+
+CI
+
+* Added actions workflow for CI on GitHub.
+
+Misc.
+
+* Updated various type annotations for type-checking compliance.
+
+* Updated to use now publicly available ``smqtk-image-io`` package from
+  PYPI.
+
+
+Fixes
+-----
+
+CI
+
+* Fix other warnings.
+
+* Fixed Unit Tests for Image Readers
