@@ -1,5 +1,5 @@
-SMQTK v0.15.0 Release Notes
-===========================
+v0.15.0
+=======
 
 This is the initial release of ``smqtk-image-io``, spinning off from
 v0.14.0 of the monolithic `SMQTK`_ library.
