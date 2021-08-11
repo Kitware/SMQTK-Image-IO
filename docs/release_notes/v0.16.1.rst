@@ -1,0 +1,14 @@
+v0.16.1
+=======
+
+The primary motivation of this patch is it add the `py.typed` file.
+Without it, imports of `SMQTK-Image-IO` will likely set off errors
+in mypy typechecking.
+
+Updates / New Features
+----------------------
+
+
+Fixes
+-----
+* Added missing `py.typed`
