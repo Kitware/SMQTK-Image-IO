@@ -8,4 +8,3 @@ Updates / New Features
 
 Fixes
 -----
-* Added missing `py.typed`
