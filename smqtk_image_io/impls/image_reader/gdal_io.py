@@ -6,7 +6,6 @@ from typing import Dict, Optional, List, Sequence, Set, Union, Iterable
 import warnings
 
 import numpy as np
-from six.moves import range
 
 from smqtk_dataprovider import DataElement
 from smqtk_image_io.interfaces.image_reader import ImageReader

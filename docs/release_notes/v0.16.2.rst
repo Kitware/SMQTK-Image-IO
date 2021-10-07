@@ -1,0 +1,11 @@
+v0.16.2
+=======
+This patch fixes the erroneous use of the ``six`` package that lingered.
+
+Updates / New Features
+----------------------
+
+
+Fixes
+-----
+* Removed erroneous, lingering use of the ``six`` package.
