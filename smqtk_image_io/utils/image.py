@@ -6,8 +6,6 @@ import numpy
 import PIL.Image
 import PIL.ImageEnhance
 
-from six.moves import range
-
 from smqtk_dataprovider import DataElement
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
 

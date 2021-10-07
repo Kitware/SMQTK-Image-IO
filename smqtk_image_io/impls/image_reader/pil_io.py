@@ -1,6 +1,6 @@
 import numpy
 
-from six import BytesIO
+from io import BytesIO
 
 from smqtk_dataprovider import DataElement
 from smqtk_image_io.interfaces.image_reader import ImageReader
