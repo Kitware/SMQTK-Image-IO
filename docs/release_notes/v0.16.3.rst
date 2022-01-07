@@ -1,5 +1,7 @@
 v0.16.3
 =======
+This patch release makes the `ImageReader` plugins discoverable via
+`get_impls()`.
 
 
 Updates / New Features
