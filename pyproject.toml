@@ -53,6 +53,11 @@ pytest-cov = "^2.11.1"
 ipython = "^7.16"
 jedi = "^0.17"
 
+[tool.poetry.plugins."smqtk_plugins"]
+# ImageReader
+"smqtk_image_io.impls.image_reader.gdal_io" = "smqtk_image_io.impls.image_reader.gdal_io"
+"smqtk_image_io.impls.image_reader.pil_io" = "smqtk_image_io.impls.image_reader.pil_io"
+
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [
