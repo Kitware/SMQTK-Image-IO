@@ -8,3 +8,4 @@ Release Notes
    release_notes/v0.16.0
    release_notes/v0.16.1
    release_notes/v0.16.2
+   release_notes/v0.16.3
