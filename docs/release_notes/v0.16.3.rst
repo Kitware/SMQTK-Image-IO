@@ -29,5 +29,5 @@ CI
 
 Misc.
 
- * Add smqtk_plugins section to pyproject.toml so that ImageReader
-   implementations are discoverable
+* Add smqtk_plugins section to pyproject.toml so that ImageReader
+  implementations are discoverable.
