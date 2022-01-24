@@ -17,3 +17,6 @@ Dependency Versions
 
 * Update the developer dependency and locked version of ipython to address a
   security vulnerability.
+
+* Update the required and locked version of pillow to address a security
+  vulnerability.
