@@ -14,3 +14,6 @@ Fixes
 Dependency Versions
 
 * Update the locked version of urllib3 to address a security vulnerability.
+
+* Update the developer dependency and locked version of ipython to address a
+  security vulnerability.
