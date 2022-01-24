@@ -10,3 +10,7 @@ Misc.
 
 Fixes
 -----
+
+Dependency Versions
+
+* Update the locked version of urllib3 to address a security vulnerability.
