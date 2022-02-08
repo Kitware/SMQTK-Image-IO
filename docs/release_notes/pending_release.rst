@@ -24,3 +24,6 @@ Dependency Versions
 
 * Update the required and locked version of pillow to address a security
   vulnerability.
+
+* Removed `jedi = "^0.17"` requirement and update to `ipython = "^7.17.3"`
+  since recent ipython update appropriately addresses the dependency.
