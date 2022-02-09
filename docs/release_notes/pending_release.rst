@@ -8,6 +8,10 @@ Misc.
 
 * Update .gitignore away from the old monorepo version.
 
+Documentation
+
+* Updated CONTRIBUTING.md to reference smqtk-core's CONTRIBUTING.md file.
+
 Fixes
 -----
 
