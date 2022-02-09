@@ -4,6 +4,11 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI
+
+* Updated CI unittests workflow to include codecov reporting and to run
+  nightly.
+
 Misc.
 
 * Updated .gitignore away from the old monorepo version.
