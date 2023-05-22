@@ -1,0 +1,12 @@
+v0.16.4
+=======
+This patch addresses 2 critical and 1 high vulnerability for Pillow.
+
+Updates / New Features
+----------------------
+* Updated Python support to \>=3.7,\<3.11.
+
+
+Fixes
+-----
+* Updated Pillow to \>=9.2.0 to address vulnerabilities.

@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 ###############################################################################
 [tool.poetry]
 name = "smqtk_image_io"
-version = "0.16.3"
+version = "0.16.4"
 description = "SMQTK Image IO"
 authors = ["Kitware, Inc. <smqtk-developers@kitware.com>"]
 license = "BSD-3-Clause"
@@ -18,22 +18,23 @@ classifiers = [
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Unix',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.7,<3.11"
 numpy = "^1.19.5"
-pillow = "^8.3.2"
+pillow = ">=9.2.0"
 smqtk-core = ">=0.18.0"
 smqtk-dataprovider = ">=0.16.0"
 
 
 [tool.poetry.dev-dependencies]
 # CI
+importlib-metadata="<5.0"
 flake8 = "^3.9.0"
 flake8-mutable = "^1.2.0"
 mypy = "^0.812"
