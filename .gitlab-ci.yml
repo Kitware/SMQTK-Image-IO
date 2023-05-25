@@ -4,7 +4,7 @@ stages:
 # Global default parameters set for all jobs unless overridden by job-specific
 # configuration.
 default:
-  image: python:3.6-buster
+  image: python:3.8-buster
   interruptible: true
 
 # Global default variables set for all jobs unless overridden by job-specific
@@ -52,22 +52,29 @@ test:build_docs:
     - make html
     - stat _build/html/index.html
 
-test:py36:
-  extends: .test_job_defaults
-  script:
-    - *test_setup  # expand `&test_setup` anchor above into here.
-    - pytest --cov=smqtk --cov-config=.pytest.coveragerc
-
 test:py37:
   extends: .test_job_defaults
-  image: python:3.7-buster
   script:
     - *test_setup  # expand `&test_setup` anchor above into here.
     - pytest --cov=smqtk --cov-config=.pytest.coveragerc
 
 test:py38:
   extends: .test_job_defaults
-  image: python:3.8-buster
+  image: python:3.9-buster
+  script:
+    - *test_setup  # expand `&test_setup` anchor above into here.
+    - pytest --cov=smqtk --cov-config=.pytest.coveragerc
+
+test:py39:
+  extends: .test_job_defaults
+  image: python:3.10-buster
+  script:
+    - *test_setup  # expand `&test_setup` anchor above into here.
+    - pytest --cov=smqtk --cov-config=.pytest.coveragerc
+
+test:py310:
+  extends: .test_job_defaults
+  image: python:3.11-buster
   script:
     - *test_setup  # expand `&test_setup` anchor above into here.
     - pytest --cov=smqtk --cov-config=.pytest.coveragerc
