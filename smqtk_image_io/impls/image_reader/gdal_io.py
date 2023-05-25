@@ -383,7 +383,7 @@ class GdalImageReader (ImageReader):
 
     def _load_as_matrix(
         self, data_element: DataElement,
-            pixel_crop: AxisAlignedBoundingBox = None) -> np.ndarray:
+            pixel_crop: Optional[AxisAlignedBoundingBox] = None) -> np.ndarray:
         """
         Internal method to be implemented that attempts loading an image
         from the given data element and returning it as an image matrix.
@@ -461,7 +461,7 @@ class GdalImageReader (ImageReader):
                 if len(self._channel_order_gci) > 1:
                     img_mat = np.ndarray([xywh[3], xywh[2],
                                           len(self._channel_order_gci)],
-                                         dtype=band_dtype)
+                                         dtype=band_dtype)  # type: np.typing.NDArray[gdal.Band]
                     for i, gci in enumerate(self._channel_order_gci):
                         #: :type: gdal.Band
                         b = gdal_ds.GetRasterBand(band_ci_to_idx[gci])
