@@ -7,7 +7,7 @@ from smqtk_image_io.bbox import AxisAlignedBoundingBox
 from smqtk_dataprovider import DataElement
 from smqtk_dataprovider.impls.data_element.matrix import MatrixDataElement
 
-from typing import Dict, Any, Set
+from typing import Optional, Dict, Any, Set
 
 
 class DummyImageReader (ImageReader):
@@ -35,7 +35,7 @@ class DummyImageReader (ImageReader):
 
     def _load_as_matrix(
         self, data_element: DataElement,
-            pixel_crop: AxisAlignedBoundingBox = None) \
+            pixel_crop: Optional[AxisAlignedBoundingBox] = None) \
             -> np.ndarray:
         raise NotImplementedError()
 
@@ -166,7 +166,7 @@ def test_load_as_matrix_property_shortcut() -> None:
     m_reader._load_as_matrix = mock.MagicMock()
     actual_mat = ImageReader.load_as_matrix(m_reader, m_elem)
 
-    np.testing.assert_allclose(actual_mat, expected_mat)
+    np.testing.assert_allclose(actual_mat, expected_mat)  # type: ignore
 
     m_prop_matrix.assert_called_once()
     m_reader._load_as_matrix.assert_not_called()

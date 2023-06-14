@@ -4,10 +4,16 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+Python
+
+* New minimum supported python changed to `python = "^3.8"`.
+
 CI
 
 * Updated CI unittests workflow to include codecov reporting.
   Reduced CodeCov report submission by skipping this step on scheduled runs.
+
+* Updated CI unittests to reflect new minimum support `python = "^3.8"`.
 
 Misc.
 
@@ -32,3 +38,6 @@ Dependency Versions
 
 * Removed `jedi = "^0.17"` requirement and updated to `ipython = "^7.17.3"`
   since recent ipython update appropriately addresses the dependency.
+
+* Updated the locked versions of dependencies to reflect new minimum
+  support `python = "^3.8".

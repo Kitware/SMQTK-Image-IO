@@ -491,7 +491,7 @@ class TestGdalImageReader (unittest.TestCase):
                                                pixel_crop=self.gh_cropped_bbox)
         cropped_expected = reader.load_as_matrix(self.gh_cropped_file_element)
         # noinspection PyTypeChecker
-        numpy.testing.assert_allclose(cropped_actual, cropped_expected)
+        numpy.testing.assert_allclose(cropped_actual, cropped_expected)  # type: ignore
 
     def test_load_as_matrix_with_crop_not_in_bounds(self) -> None:
         """
@@ -611,13 +611,13 @@ class TestGdalImageReader (unittest.TestCase):
         mat_rgb = GdalImageReader().load_as_matrix(self.gh_file_element)
         mat_brg = GdalImageReader(channel_order='brg')\
             .load_as_matrix(self.gh_file_element)
-        numpy.testing.assert_allclose(mat_brg,
+        numpy.testing.assert_allclose(mat_brg,  # type: ignore
                                       mat_rgb[:, :, [2, 0, 1]])  # type: ignore
 
         # Duplicate bands? Because we can?
         mat_bgrgb = GdalImageReader(channel_order='bgrbg')\
             .load_as_matrix(self.gh_file_element)
-        numpy.testing.assert_allclose(mat_bgrgb,
+        numpy.testing.assert_allclose(mat_bgrgb,  # type: ignore
                                       mat_rgb[:, :, [2, 1, 0, 2, 1]])  # type: ignore
 
     def test_load_as_matrix_channel_reorder_cropped(self) -> None:
