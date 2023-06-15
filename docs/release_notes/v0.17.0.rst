@@ -1,6 +1,10 @@
 v0.17.0
 =======
 
+This minor release updates the mimumum supported python to 
+`python = "^3.8"`, addresses dependency vulnerabilities, and 
+updates typing to conform with current mypy and pytest standards.
+
 Updates / New Features
 ----------------------
 
