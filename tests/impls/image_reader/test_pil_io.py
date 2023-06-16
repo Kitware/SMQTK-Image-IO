@@ -175,7 +175,7 @@ class TestPilImageReader (unittest.TestCase):
         mat_expected = inst.load_as_matrix(self.gh_cropped_file_element)
         mat_actual = inst.load_as_matrix(self.gh_file_element,
                                          pixel_crop=self.gh_cropped_bbox)
-        numpy.testing.assert_allclose(mat_actual, mat_expected)
+        numpy.testing.assert_allclose(mat_actual, mat_expected)  # type: ignore
 
     def test_load_as_matrix_with_crop_not_integer(self) -> None:
         """

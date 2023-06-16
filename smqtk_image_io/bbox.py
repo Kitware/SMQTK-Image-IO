@@ -2,6 +2,7 @@ import functools
 import operator
 
 import numpy
+import numpy.typing
 
 from smqtk_core import Configurable
 
@@ -37,8 +38,8 @@ class AxisAlignedBoundingBox (Configurable):
     EQUALITY_RTOL = 1.e-5
 
     def __init__(
-        self, min_vertex: Sequence[Union[int, float]],
-            max_vertex: Sequence[Union[int, float]]) -> None:
+        self, min_vertex: Union[Sequence[Union[int, float]], numpy.typing.NDArray[numpy.inexact]],
+            max_vertex: Union[Sequence[Union[int, float]], numpy.typing.NDArray[numpy.inexact]]) -> None:
         """
         Create a new AxisAlignedBoundingBox from the given minimum and maximum
         euclidean-space vertex.
@@ -119,8 +120,8 @@ class AxisAlignedBoundingBox (Configurable):
         self._set_vertices(*state)
 
     def _set_vertices(
-        self, min_v: Sequence[Union[int, float]],
-            max_v: Sequence[Union[int, float]]) -> None:
+        self, min_v: Union[Sequence[Union[int, float]], numpy.typing.NDArray[numpy.inexact]],
+            max_v: Union[Sequence[Union[int, float]], numpy.typing.NDArray[numpy.inexact]]) -> None:
         self.min_vertex = numpy.asarray(min_v)
         self.min_vertex.flags.writeable = False
         self.max_vertex = numpy.asarray(max_v)
