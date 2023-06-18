@@ -1,0 +1,47 @@
+v0.17.0
+=======
+
+This minor release updates the mimumum supported python to 
+`python = "^3.8"`, addresses dependency vulnerabilities, and 
+updates typing to conform with current mypy and pytest standards.
+
+Updates / New Features
+----------------------
+
+Python
+
+* New minimum supported python changed to `python = "^3.8"`.
+
+CI
+
+* Updated CI unittests workflow to include codecov reporting.
+  Reduced CodeCov report submission by skipping this step on scheduled runs.
+
+* Updated CI unittests to reflect new minimum support `python = "^3.8"`.
+
+Misc.
+
+* Updated .gitignore away from the old monorepo version.
+
+Documentation
+
+* Updated CONTRIBUTING.md to reference smqtk-core's CONTRIBUTING.md file.
+
+Fixes
+-----
+
+Dependency Versions
+
+* Updated the locked version of urllib3 to address a security vulnerability.
+
+* Updated the developer dependency and locked version of ipython to address a
+  security vulnerability.
+
+* Updated the required and locked version of pillow to address a security
+  vulnerability.
+
+* Removed `jedi = "^0.17"` requirement and updated to `ipython = "^7.17.3"`
+  since recent ipython update appropriately addresses the dependency.
+
+* Updated the locked versions of dependencies to reflect new minimum
+  support `python = "^3.8".
