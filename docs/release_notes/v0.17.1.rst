@@ -1,8 +1,12 @@
 v0.17.1
 =======
 
+The recent minor release `v0.17.0` added in the use of `numpy.typing.NDArray` for static typing, this necessitates the need to raise the numpy minimum to 1.21+ but was not appropriately updated in the abstract dependencies.
+
 Updates / New Features
 ----------------------
 
 Fixes
 -----
+
+ * Raised the minimum numpy version to `1.21+`.
