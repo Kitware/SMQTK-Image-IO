@@ -27,7 +27,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 pillow = ">=8.2.0"
-numpy = ">=1.19.5"
+numpy = ">=1.21"
 smqtk-core = ">=0.19"
 smqtk-dataprovider = ">=0.16.0"
 
