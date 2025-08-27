@@ -1,4 +1,4 @@
-from distutils.version import LooseVersion
+from packaging.version import Version
 import os
 import pickle
 import re
@@ -109,7 +109,7 @@ class TestGdalHelperFunctions (unittest.TestCase):
         """
         Test that VSIMEM loading context
         """
-        if int(LooseVersion(osgeo.__version__).version[0]) < 2:
+        if Version(osgeo.__version__).major < 2:
             pytest.skip("Skipping VSIMEM test because GDAL version < 2")
 
         # Creating separate element from global so we can mock it up.
@@ -455,7 +455,7 @@ class TestGdalImageReader (unittest.TestCase):
         """
         Test that whole image is loaded successfully using vsimem loader.
         """
-        if int(LooseVersion(osgeo.__version__).version[0]) < 2:
+        if Version(osgeo.__version__).major < 2:
             pytest.skip("Skipping VSIMEM test because GDAL version < 2")
 
         wrapped_temp_loader = mock.MagicMock(wraps=load_dataset_tempfile)

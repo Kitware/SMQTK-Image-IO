@@ -11,7 +11,6 @@ from smqtk_dataprovider.impls.data_element.file import DataFileElement
 from smqtk_dataprovider.impls.data_element.memory import DataMemoryElement
 from smqtk_core.configuration import configuration_test_helper
 
-from smqtk_image_io.impls.image_reader.pil_io import PIL
 from tests import TEST_DATA_DIR
 
 
@@ -111,7 +110,7 @@ class TestPilImageReader (unittest.TestCase):
 
     @mock.patch('smqtk_image_io.impls.image_reader.pil_io.PIL.Image.open')
     def test_load_as_matrix_other_exception(
-            self, m_pil_open: PIL.Image.open) -> None:
+            self, m_pil_open: mock.Mock) -> None:
         """
         Test that some other exception raised from ``PIL.Image.open`` is
         passed through.
@@ -126,7 +125,7 @@ class TestPilImageReader (unittest.TestCase):
 
     @mock.patch('smqtk_image_io.impls.image_reader.pil_io.PIL.Image.open')
     def test_load_as_matrix_other_io_exception(
-            self, m_pil_open: PIL.Image.open) -> None:
+            self, m_pil_open: mock.Mock) -> None:
         """
         Test that an IOError that does match conditions for alternate raise
         is raised as-is.
