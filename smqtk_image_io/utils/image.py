@@ -147,7 +147,7 @@ def image_crop_quadrant_pyramid(
                 yield (
                     level,
                     (i, j),
-                    image.crop([xs[i], ys[j], xs[i + 1], ys[j + 1]])
+                    image.crop((xs[i], ys[j], xs[i + 1], ys[j + 1]))
                 )
 
 
@@ -193,7 +193,7 @@ def image_crop_tiles(
     while (y + tile_height) < image.height:
         x = 0
         while (x + tile_width) < image.width:
-            t = image.crop([x, y, x+tile_width, y+tile_height])
+            t = image.crop((x, y, x+tile_width, y+tile_height))
             yield (x, y, t)
             x += stride_x
         y += stride_y

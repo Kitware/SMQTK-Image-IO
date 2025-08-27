@@ -100,6 +100,7 @@ class PilImageReader (ImageReader):
         # and that approach actually alleviates anything.
 
         # Catch and raise alternate IOError exception for readability.
+        img: PIL.Image.Image
         try:
             #: :type: PIL.Image.Image
             img = PIL.Image.open(BytesIO(data_element.get_bytes()))
