@@ -1,6 +1,6 @@
 import collections
 from contextlib import contextmanager
-from distutils.version import LooseVersion
+from packaging.version import Version
 import tempfile
 from typing import Dict, Optional, List, Sequence, Set, Union, Iterable
 import warnings
@@ -344,9 +344,7 @@ class GdalImageReader (ImageReader):
                              .format(load_method,
                                      self.LOAD_METHOD_CONTEXTMANAGERS))
         elif self._load_method == self.LOAD_METHOD_VSIMEM:
-            gdal_major_version: int = int(
-                LooseVersion(osgeo.__version__).version[0]
-            )
+            gdal_major_version: int = Version(osgeo.__version__).major
             if gdal_major_version < 2:
                 raise RuntimeError("Load method '{}' was specified, "
                                    "but required GDAL version of 2 is not "
