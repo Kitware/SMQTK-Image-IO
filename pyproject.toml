@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 ###############################################################################
 [tool.poetry]
 name = "smqtk_image_io"
-version = "0.18.0"
+version = "0.19.0"
 description = "SMQTK Image IO"
 authors = ["Kitware, Inc. <smqtk-developers@kitware.com>"]
 license = "BSD-3-Clause"
@@ -22,14 +22,20 @@ classifiers = [
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
 ]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pillow = ">=8.2.0"
-numpy = ">=1.21"
-smqtk-core = ">=0.20"
-smqtk-dataprovider = ">=0.19.0"
+pillow = ">=12.3.0"
+numpy = [
+    # Newer Python versions require NumPy releases with compatible wheels.
+    {version = ">=1.23.5", python = "<3.13"},
+    {version = ">=2.1", python = ">=3.13,<3.14"},
+    {version = ">=2.3.2", python = ">=3.14"},
+]
+smqtk-core = ">=0.22.0"
+smqtk-dataprovider = ">=0.20.0"
 
 
 [tool.poetry.dev-dependencies]
@@ -45,12 +51,12 @@ sphinx-argparse = ">=0.2.5"
 sphinx-prompt = ">=1.4.0"
 livereload = ">=2.6.3"
 # Testing
-coverage = ">=5.5"
+coverage = ">=7.10.6"
 mock = ">=4.0.3"
-pytest = ">=6.2.2"
+pytest = ">=9.0.3"
 pytest-cov = ">=2.11.1"
 # Development
-ipython = ">=7.16.3"
+ipython = ">=8.10.0"
 
 [tool.poetry.plugins."smqtk_plugins"]
 # ImageReader
