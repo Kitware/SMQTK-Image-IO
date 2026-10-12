@@ -4,21 +4,5 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
-* Added official Python 3.14 support and unit-test coverage in GitHub CI.
-
-* Required SMQTK-Core 0.22.0 and SMQTK-Dataprovider 0.20.0 for Python 3.14
-  support and NumPy 2 compatibility on older supported Python versions.
-
-* Declared NumPy compatibility minimums explicitly for Python 3.10–3.12,
-  3.13, and 3.14, while allowing NumPy 1 or 2 on Python 3.10–3.12.
-
 Fixes
 -----
-
-* Updated Pillow and locked dependencies to patched releases, and raised the
-  minimum pytest and IPython versions to exclude vulnerable releases.
-
-* Updated coverage's minimum version for Python 3.14 support.
-
-* Used Amazon ECR Public's mirror of Docker's official Python images in CI to
-  avoid Docker Hub's unauthenticated pull rate limit.
