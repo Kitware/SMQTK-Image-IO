@@ -1,6 +1,11 @@
 v0.19.0
 =======
 
+This release adds official Python 3.14 support and testing, with explicit NumPy
+compatibility minimums and NumPy 2 support on older supported Python versions.
+It also updates Pillow and other dependencies for security and improves CI
+reliability.
+
 Updates / New Features
 ----------------------
 
